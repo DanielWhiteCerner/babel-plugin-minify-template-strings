@@ -1,25 +1,35 @@
 {
-	"name": "babel-plugin-dedent",
-	"description": "Remove indentation from multiline template strings",
-	"version": "2.0.0",
-	"homepage": "https://github.com/MartinKolarik/babel-plugin-dedent/",
-	"github": "https://github.com/MartinKolarik/babel-plugin-dedent/",
+	"name": "babel-plugin-minify-template-strings",
+	"description": "Remove all leading/trailing white-space & newline characters from multiline template strings",
+	"version": "1.0.0",
+	"homepage": "https://github.com/HeroofOne/babel-plugin-minify-template-strings/",
+	"github": "https://github.com/HeroofOne/babel-plugin-minify-template-strings/",
 	"main": "lib/index.js",
 	"keywords": [
 		"template literals",
 		"template strings",
+		"whitespace",
+		"white-space",
+		"white space",
+		"newline",
 		"dedent",
 		"deintend",
 		"indentation",
 		"es6",
-		"harmony",
 		"babel"
 	],
 	"author": {
-		"name": "Martin Kolárik",
-		"email": "martin@kolarik.sk",
-		"url": "https://kolarik.me"
+		"name": "Daniel White",
+		"email": "Daniel.White@Cerner.com",
+		"url": "https://github.com/HeroofOne/"
 	},
+	"contributors": [
+		{
+			"name": "Martin Kolárik",
+			"email": "martin@kolarik.sk",
+			"url": "https://kolarik.me"
+		}
+	],
 	"license": "MIT",
 	"devDependencies": {
 		"chai": "~3.4",
@@ -38,9 +48,9 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/MartinKolarik/babel-plugin-dedent.git"
+		"url": "https://github.com/HeroofOne/babel-plugin-minify-template-strings.git"
 	},
 	"bugs": {
-		"url": "https://github.com/MartinKolarik/babel-plugin-dedent/issues/"
+		"url": "https://github.com/HeroofOne/babel-plugin-minify-template-strings/issues/"
 	}
 }

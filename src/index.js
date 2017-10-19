@@ -6,7 +6,7 @@ module.exports = function babelPluginDedent (babel) {
 			CallExpression (path) {
 				let node = path.node;
 
-				if (t.isIdentifier(node.callee, { name: 'dedent' })) {
+				if (t.isIdentifier(node.callee, { name: 'html' })) {
 					if (t.isTemplateLiteral(node.arguments[0])) {
 						transform(node.arguments[0].quasis);
 						return path.replaceWith(node.arguments[0]);
@@ -19,7 +19,7 @@ module.exports = function babelPluginDedent (babel) {
 			TaggedTemplateExpression (path) {
 				let node = path.node;
 
-				if (t.isIdentifier(node.tag, { name: 'dedent' })) {
+				if (t.isIdentifier(node.tag, { name: 'html' })) {
 					transform(node.quasi.quasis);
 					return path.replaceWith(node.quasi);
 				}
@@ -43,12 +43,11 @@ function transform (quasis) {
 	});
 
 	if (matches.length) {
-		let size = Math.min(...matches.map(value => value.length - 1));
-		let pattern = new RegExp(`\n[\t ]{${size}}`, 'g');
+		let pattern = new RegExp(`[\t ]*[\r?\n]+[\t ]+`, 'g');
 
 		[ 'raw', 'cooked' ].forEach((type) => {
 			elements.forEach((element) => {
-				element.value[type] = element.value[type].replace(pattern, '\n');
+				element.value[type] = element.value[type].replace(pattern, '');
 			});
 		});
 	}
@@ -57,7 +56,7 @@ function transform (quasis) {
 }
 
 function ltrim (element) {
-	let pattern = /^\r?\n/;
+	let pattern = /^[\r?\n]+/;
 
 	if (pattern.test(element.value.raw)) {
 		element.value.raw = element.value.raw.replace(pattern, '');
@@ -68,11 +67,9 @@ function ltrim (element) {
 }
 
 function rtrim (element) {
-	let match;
+	let pattern = /[\r?\n]+$/;
 
-	if (match = element.value.raw.match(/\r?\n([\t ]*)$/)) {
-		let pattern = new RegExp(`\r?\n[\t ]{${match[1].length}}$`);
-
+	if (pattern.test(element.value.raw)) {
 		element.value.raw = element.value.raw.replace(pattern, '');
 		element.value.cooked = element.value.cooked.replace(pattern, '');
 	}

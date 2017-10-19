@@ -1,4 +1,4 @@
-/* global dedent:false */
+/* global html:false */
 var expect = require('chai').expect;
 
 function tag (strings, ...values) {
@@ -11,518 +11,458 @@ function tag (strings, ...values) {
 	return string;
 }
 
-describe('dedent tag', () => {
+describe('html tag', () => {
 	it('should work with tabs', () => {
-		expect(dedent`Line #1
+		expect(html`Line #1
 			Line #2
-			Line #3`).to.equal('Line #1\nLine #2\nLine #3');
+			Line #3`).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent`Line #${1}
+		expect(html`Line #${1}
 			Line #${2}
-			Line #${3}`).to.equal('Line #1\nLine #2\nLine #3');
+			Line #${3}`).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent`${1}. line #${1}
+		expect(html`${1}. line #${1}
 			${2}. line #${2}
-			${3}. line`).to.equal('1. line #1\n2. line #2\n3. line');
+			${3}. line`).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should work with spaces', () => {
-		expect(dedent`Line #1
+		expect(html`Line #1
             Line #2
-            Line #3`).to.equal('Line #1\nLine #2\nLine #3');
+            Line #3`).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent`Line #${1}
+		expect(html`Line #${1}
             Line #${2}
-            Line #${3}`).to.equal('Line #1\nLine #2\nLine #3');
+            Line #${3}`).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent`${1}. line #${1}
+		expect(html`${1}. line #${1}
             ${2}. line #${2}
-            ${3}. line`).to.equal('1. line #1\n2. line #2\n3. line');
+            ${3}. line`).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should remove leading/trailing line break', () => {
 		expect(
-			dedent`
+			html`
 			Line #1
 			Line #2
 			Line #3
 			`
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent`
+			html`
 			Line #${1}
 			Line #${2}
 			Line #${3}
 			`
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent`
+			html`
 			${1}. line #${1}
 			${2}. line #${2}
 			${3}. line
 			`
-		).to.equal('1. line #1\n2. line #2\n3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 
-	it('should not remove more than one leading/trailing line break', () => {
+	it('should remove any leading/trailing line breaks', () => {
 		expect(
-			dedent`
+			html`
+			
 
 			Line #1
 			Line #2
 			Line #3
+			
 
 			`
-		).to.equal('\nLine #1\nLine #2\nLine #3\n');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent`
+			html`
+
 
 			Line #${1}
 			Line #${2}
 			Line #${3}
 
+
 			`
-		).to.equal('\nLine #1\nLine #2\nLine #3\n');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent`
+			html`
+
 
 			${1}. line #${1}
 			${2}. line #${2}
 			${3}. line
 
-			`
-		).to.equal('\n1. line #1\n2. line #2\n3. line\n');
-	});
 
-	it('should remove the same number of tabs/spaces from each line', () => {
-		expect(
-			dedent`
-			Line #1
-				Line #2
-					Line #3
 			`
-		).to.equal('Line #1\n\tLine #2\n\t\tLine #3');
-
-		expect(
-			dedent`
-			Line #${1}
-				Line #${2}
-					Line #${3}
-			`
-		).to.equal('Line #1\n\tLine #2\n\t\tLine #3');
-
-		expect(
-			dedent`
-			${1}. line #${1}
-				${2}. line #${2}
-					${3}. line
-			`
-		).to.equal('1. line #1\n\t2. line #2\n\t\t3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should ignore the last line if it doesn\'t contain anything else than whitespace', () => {
 		expect(
 			function () {
-				return dedent`
+				return html`
 					Line #1
 					Line #2
 					Line #3
 				`;
 			}()
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
 			function () {
-				return dedent`
+				return html`
 					Line #${1}
 					Line #${2}
 					Line #${3}
 				`;
 			}()
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
 			function () {
-				return dedent`
+				return html`
 					${1}. line #${1}
 					${2}. line #${2}
 					${3}. line
 				`;
 			}()
-		).to.equal('1. line #1\n2. line #2\n3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should operate on raw strings', () => {
 		expect(
-			dedent`
+			html`
 			\tLine #1
 			\tLine #2
 			\tLine #3
 			`
-		).to.equal('\tLine #1\n\tLine #2\n\tLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent`
+			html`
 			\tLine #${1}
 			\tLine #${2}
 			\tLine #${3}
 			`
-		).to.equal('\tLine #1\n\tLine #2\n\tLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent`
+			html`
 			\t${1}. line #${1}
 			\t${2}. line #${2}
 			\t${3}. line
 			`
-		).to.equal('\t1. line #1\n\t2. line #2\n\t3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 });
 
-describe('dedent() function', () => {
+describe('html() function', () => {
 	it('should work with tabs', () => {
-		expect(dedent(`Line #1
+		expect(html(`Line #1
 			Line #2
-			Line #3`)).to.equal('Line #1\nLine #2\nLine #3');
+			Line #3`)).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent(`Line #${1}
+		expect(html(`Line #${1}
 			Line #${2}
-			Line #${3}`)).to.equal('Line #1\nLine #2\nLine #3');
+			Line #${3}`)).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent(`${1}. line #${1}
+		expect(html(`${1}. line #${1}
 			${2}. line #${2}
-			${3}. line`)).to.equal('1. line #1\n2. line #2\n3. line');
+			${3}. line`)).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should work with spaces', () => {
-		expect(dedent(`Line #1
+		expect(html(`Line #1
             Line #2
-            Line #3`)).to.equal('Line #1\nLine #2\nLine #3');
+            Line #3`)).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent(`Line #${1}
+		expect(html(`Line #${1}
             Line #${2}
-            Line #${3}`)).to.equal('Line #1\nLine #2\nLine #3');
+            Line #${3}`)).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent(`${1}. line #${1}
+		expect(html(`${1}. line #${1}
             ${2}. line #${2}
-            ${3}. line`)).to.equal('1. line #1\n2. line #2\n3. line');
+            ${3}. line`)).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should remove leading/trailing line break', () => {
 		expect(
-			dedent(`
+			html(`
 			Line #1
 			Line #2
 			Line #3
 			`)
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(`
+			html(`
 			Line #${1}
 			Line #${2}
 			Line #${3}
 			`)
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(`
+			html(`
 			${1}. line #${1}
 			${2}. line #${2}
 			${3}. line
 			`)
-		).to.equal('1. line #1\n2. line #2\n3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 
-	it('should not remove more than one leading/trailing line break', () => {
+	it('should remove any leading/trailing line breaks', () => {
 		expect(
-			dedent(`
+			html(`
+
 
 			Line #1
 			Line #2
 			Line #3
 
+
 			`)
-		).to.equal('\nLine #1\nLine #2\nLine #3\n');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(`
+			html(`
+
 
 			Line #${1}
-			Line #${2}
+			Line #${2} 
 			Line #${3}
 
+
 			`)
-		).to.equal('\nLine #1\nLine #2\nLine #3\n');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(`
+			html(`
+
 
 			${1}. line #${1}
 			${2}. line #${2}
 			${3}. line
 
-			`)
-		).to.equal('\n1. line #1\n2. line #2\n3. line\n');
-	});
 
-	it('should remove the same number of tabs/spaces from each line', () => {
-		expect(
-			dedent(`
-			Line #1
-				Line #2
-					Line #3
 			`)
-		).to.equal('Line #1\n\tLine #2\n\t\tLine #3');
-
-		expect(
-			dedent(`
-			Line #${1}
-				Line #${2}
-					Line #${3}
-			`)
-		).to.equal('Line #1\n\tLine #2\n\t\tLine #3');
-
-		expect(
-			dedent(`
-			${1}. line #${1}
-				${2}. line #${2}
-					${3}. line
-			`)
-		).to.equal('1. line #1\n\t2. line #2\n\t\t3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should ignore the last line if it doesn\'t contain anything else than whitespace', () => {
 		expect(
 			function () {
-				return dedent(`
+				return html(`
 					Line #1
 					Line #2
 					Line #3
 				`);
 			}()
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
 			function () {
-				return dedent(`
+				return html(`
 					Line #${1}
 					Line #${2}
 					Line #${3}
 				`);
 			}()
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
 			function () {
-				return dedent(`
+				return html(`
 					${1}. line #${1}
 					${2}. line #${2}
 					${3}. line
 				`);
 			}()
-		).to.equal('1. line #1\n2. line #2\n3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 
 	it('should operate on raw strings', () => {
 		expect(
-			dedent(`
+			html(`
 			\tLine #1
 			\tLine #2
 			\tLine #3
 			`)
-		).to.equal('\tLine #1\n\tLine #2\n\tLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(`
+			html(`
 			\tLine #${1}
-			\tLine #${2}
+			\tLine #${2} \t
 			\tLine #${3}
 			`)
-		).to.equal('\tLine #1\n\tLine #2\n\tLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(`
+			html(`
 			\t${1}. line #${1}
 			\t${2}. line #${2}
 			\t${3}. line
 			`)
-		).to.equal('\t1. line #1\n\t2. line #2\n\t3. line');
+		).to.equal('1. line #12. line #23. line');
 	});
 });
 
-describe('dedent() function with custom tag', () => {
+describe('html() function with custom tag', () => {
 	it('should work with tabs', () => {
-		expect(dedent(tag`Line #1
+		expect(html(tag`Line #1
 			Line #2
-			Line #3`)).to.equal('Line #1\nLine #2\nLine #3');
+			Line #3`)).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent(tag`Line #${1}
+		expect(html(tag`Line #${1}
 			Line #${2}
-			Line #${3}`)).to.equal('Line #2\nLine #4\nLine #6');
+			Line #${3}`)).to.equal('Line #2Line #4Line #6');
 
-		expect(dedent(tag`${1}. line #${1}
+		expect(html(tag`${1}. line #${1}
 			${2}. line #${2}
-			${3}. line`)).to.equal('2. line #2\n4. line #4\n6. line');
+			${3}. line`)).to.equal('2. line #24. line #46. line');
 	});
 
 	it('should work with spaces', () => {
-		expect(dedent(tag`Line #1
+		expect(html(tag`Line #1
             Line #2
-            Line #3`)).to.equal('Line #1\nLine #2\nLine #3');
+            Line #3`)).to.equal('Line #1Line #2Line #3');
 
-		expect(dedent(tag`Line #${1}
+		expect(html(tag`Line #${1}
             Line #${2}
-            Line #${3}`)).to.equal('Line #2\nLine #4\nLine #6');
+            Line #${3}`)).to.equal('Line #2Line #4Line #6');
 
-		expect(dedent(tag`${1}. line #${1}
+		expect(html(tag`${1}. line #${1}
             ${2}. line #${2}
-            ${3}. line`)).to.equal('2. line #2\n4. line #4\n6. line');
+            ${3}. line`)).to.equal('2. line #24. line #46. line');
 	});
 
 	it('should remove leading/trailing line break', () => {
 		expect(
-			dedent(tag`
+			html(tag`
 			Line #1
 			Line #2
 			Line #3
 			`)
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(tag`
+			html(tag`
 			Line #${1}
 			Line #${2}
 			Line #${3}
 			`)
-		).to.equal('Line #2\nLine #4\nLine #6');
+		).to.equal('Line #2Line #4Line #6');
 
 		expect(
-			dedent(tag`
+			html(tag`
 			${1}. line #${1}
 			${2}. line #${2}
 			${3}. line
 			`)
-		).to.equal('2. line #2\n4. line #4\n6. line');
+		).to.equal('2. line #24. line #46. line');
 	});
 
-	it('should not remove more than one leading/trailing line break', () => {
+	it('should remove any leading/trailing line breaks', () => {
 		expect(
-			dedent(tag`
+			html(tag`
+
 
 			Line #1
 			Line #2
 			Line #3
 
+
 			`)
-		).to.equal('\nLine #1\nLine #2\nLine #3\n');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(tag`
+			html(tag`
+
 
 			Line #${1}
 			Line #${2}
 			Line #${3}
 
+
 			`)
-		).to.equal('\nLine #2\nLine #4\nLine #6\n');
+		).to.equal('Line #2Line #4Line #6');
 
 		expect(
-			dedent(tag`
+			html(tag`
+
 
 			${1}. line #${1}
 			${2}. line #${2}
 			${3}. line
 
-			`)
-		).to.equal('\n2. line #2\n4. line #4\n6. line\n');
-	});
 
-	it('should remove the same number of tabs/spaces from each line', () => {
-		expect(
-			dedent(tag`
-			Line #1
-				Line #2
-					Line #3
 			`)
-		).to.equal('Line #1\n\tLine #2\n\t\tLine #3');
-
-		expect(
-			dedent(tag`
-			Line #${1}
-				Line #${2}
-					Line #${3}
-			`)
-		).to.equal('Line #2\n\tLine #4\n\t\tLine #6');
-
-		expect(
-			dedent(tag`
-			${1}. line #${1}
-				${2}. line #${2}
-					${3}. line
-			`)
-		).to.equal('2. line #2\n\t4. line #4\n\t\t6. line');
+		).to.equal('2. line #24. line #46. line');
 	});
 
 	it('should ignore the last line if it doesn\'t contain anything else than whitespace', () => {
 		expect(
 			function () {
-				return dedent(tag`
+				return html(tag`
 					Line #1
 					Line #2
 					Line #3
 				`);
 			}()
-		).to.equal('Line #1\nLine #2\nLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
 			function () {
-				return dedent(tag`
+				return html(tag`
 					Line #${1}
 					Line #${2}
 					Line #${3}
 				`);
 			}()
-		).to.equal('Line #2\nLine #4\nLine #6');
+		).to.equal('Line #2Line #4Line #6');
 
 		expect(
 			function () {
-				return dedent(tag`
+				return html(tag`
 					${1}. line #${1}
 					${2}. line #${2}
 					${3}. line
 				`);
 			}()
-		).to.equal('2. line #2\n4. line #4\n6. line');
+		).to.equal('2. line #24. line #46. line');
 	});
 
 	it('should operate on raw strings', () => {
 		expect(
-			dedent(tag`
+			html(tag`
 			\tLine #1
 			\tLine #2
 			\tLine #3
 			`)
-		).to.equal('\tLine #1\n\tLine #2\n\tLine #3');
+		).to.equal('Line #1Line #2Line #3');
 
 		expect(
-			dedent(tag`
+			html(tag`
 			\tLine #${1}
-			\tLine #${2}
+			\tLine #${2} \t
 			\tLine #${3}
 			`)
-		).to.equal('\tLine #2\n\tLine #4\n\tLine #6');
+		).to.equal('Line #2Line #4Line #6');
 
 		expect(
-			dedent(tag`
+			html(tag`
 			\t${1}. line #${1}
 			\t${2}. line #${2}
 			\t${3}. line
 			`)
-		).to.equal('\t2. line #2\n\t4. line #4\n\t6. line');
+		).to.equal('2. line #24. line #46. line');
 	});
 });
