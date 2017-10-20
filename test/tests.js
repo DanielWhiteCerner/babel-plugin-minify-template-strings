@@ -1,7 +1,7 @@
 /* global html:false */
 var expect = require('chai').expect;
 
-function tag (strings, ...values) {
+function tag(strings, ...values) {
 	let string = strings[0];
 
 	for (let i = 0; i < values.length; i++) {
@@ -40,7 +40,8 @@ describe('html tag', () => {
             ${3}. line`).to.equal('1. line #12. line #23. line');
 	});
 
-	it('should remove leading/trailing line break', () => {
+	it('should remove any leading/trailing line breaks and newline characters', () => {
+
 		expect(
 			html`
 			Line #1
@@ -59,14 +60,12 @@ describe('html tag', () => {
 
 		expect(
 			html`
-			${1}. line #${1}
-			${2}. line #${2}
-			${3}. line
+				${1}. line #${1}
+				${2}. line #${2}
+				${3}. line
 			`
 		).to.equal('1. line #12. line #23. line');
-	});
 
-	it('should remove any leading/trailing line breaks', () => {
 		expect(
 			html`
 			
@@ -102,6 +101,30 @@ describe('html tag', () => {
 
 			`
 		).to.equal('1. line #12. line #23. line');
+
+		expect(html`
+
+			<span>
+				 \t {{i18n.SOMETHING}} 
+			</span>
+			
+		`).to.equal('<span>{{i18n.SOMETHING}}</span>');
+
+		expect(html`
+
+			<span>
+				${'Hello World'} \t
+			</span>
+			
+		`).to.equal('<span>Hello World</span>');
+
+		expect(html`
+
+			<span>\n\t
+				${'Hello World'} \t\n\t\n
+			</span>
+			
+		`).to.equal('<span>Hello World</span>');
 	});
 
 	it('should ignore the last line if it doesn\'t contain anything else than whitespace', () => {
@@ -192,7 +215,7 @@ describe('html() function', () => {
             ${3}. line`)).to.equal('1. line #12. line #23. line');
 	});
 
-	it('should remove leading/trailing line break', () => {
+	it('should remove any leading/trailing line breaks and newline characters', () => {
 		expect(
 			html(`
 			Line #1
@@ -216,9 +239,7 @@ describe('html() function', () => {
 			${3}. line
 			`)
 		).to.equal('1. line #12. line #23. line');
-	});
 
-	it('should remove any leading/trailing line breaks', () => {
 		expect(
 			html(`
 
@@ -236,7 +257,7 @@ describe('html() function', () => {
 
 
 			Line #${1}
-			Line #${2} 
+			Line #${2}
 			Line #${3}
 
 
@@ -254,6 +275,30 @@ describe('html() function', () => {
 
 			`)
 		).to.equal('1. line #12. line #23. line');
+
+		expect(html(`
+
+			<span>
+				 \t {{i18n.SOMETHING}} 
+			</span>
+			
+		`)).to.equal('<span>{{i18n.SOMETHING}}</span>');
+
+		expect(html(`
+
+			<span>
+				${'Hello World'} \t
+			</span>
+			
+		`)).to.equal('<span>Hello World</span>');
+
+		expect(html(`
+
+			<span>\n\t
+				${'Hello World'} \t\n\t\n
+			</span>
+			
+		`)).to.equal('<span>Hello World</span>');
 	});
 
 	it('should ignore the last line if it doesn\'t contain anything else than whitespace', () => {
@@ -300,7 +345,7 @@ describe('html() function', () => {
 		expect(
 			html(`
 			\tLine #${1}
-			\tLine #${2} \t
+			\tLine #${2}
 			\tLine #${3}
 			`)
 		).to.equal('Line #1Line #2Line #3');
@@ -344,7 +389,7 @@ describe('html() function with custom tag', () => {
             ${3}. line`)).to.equal('2. line #24. line #46. line');
 	});
 
-	it('should remove leading/trailing line break', () => {
+	it('should remove any leading/trailing line breaks and newline characters', () => {
 		expect(
 			html(tag`
 			Line #1
@@ -368,9 +413,7 @@ describe('html() function with custom tag', () => {
 			${3}. line
 			`)
 		).to.equal('2. line #24. line #46. line');
-	});
 
-	it('should remove any leading/trailing line breaks', () => {
 		expect(
 			html(tag`
 
@@ -406,6 +449,30 @@ describe('html() function with custom tag', () => {
 
 			`)
 		).to.equal('2. line #24. line #46. line');
+
+		expect(html(tag`
+
+			<span>
+				 \t {{i18n.SOMETHING}} 
+			</span>
+			
+		`)).to.equal('<span>{{i18n.SOMETHING}}</span>');
+
+		expect(html(tag`
+
+			<span>
+				${2} \t
+			</span>
+			
+		`)).to.equal('<span>4</span>');
+
+		expect(html(tag`
+
+			<span>\n\t
+				${2} \t\n\t\n
+			</span>
+			
+		`)).to.equal('<span>4</span>');
 	});
 
 	it('should ignore the last line if it doesn\'t contain anything else than whitespace', () => {

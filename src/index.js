@@ -37,13 +37,13 @@ function transform (quasis) {
 	elements.forEach((element) => {
 		let match;
 
-		if (match = element.value.raw.match(/\n[\t ]+/g)) {
+		if (match = element.value.raw.match(/\n[\t ]*/g)) {
 			matches.push(...match);
 		}
 	});
 
-	if (matches.length) {
-		let pattern = new RegExp(`[\t ]*[\r?\n]+[\t ]+`, 'g');
+	if (matches.length > 0) {
+		let pattern = new RegExp(`[\t ]*[\r?\n]+[\t ]*`, 'g');
 
 		[ 'raw', 'cooked' ].forEach((type) => {
 			elements.forEach((element) => {

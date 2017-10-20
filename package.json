@@ -1,7 +1,7 @@
 {
 	"name": "babel-plugin-minify-template-strings",
 	"description": "Remove all leading/trailing white-space & newline characters from multiline template strings",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"homepage": "https://github.com/HeroofOne/babel-plugin-minify-template-strings/",
 	"github": "https://github.com/HeroofOne/babel-plugin-minify-template-strings/",
 	"main": "lib/index.js",
